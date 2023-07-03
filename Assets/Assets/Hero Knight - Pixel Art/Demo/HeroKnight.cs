@@ -5,10 +5,10 @@ using UnityEngine.UI;
 public class HeroKnight : MonoBehaviour {
 
     [Header("Для выносливости")]
+    private bool m_isShield = false; // Проверка с щитом персонаж
     [SerializeField] private float m_stamina;
     [SerializeField] private Slider m_staminaBar;
     [SerializeField] private float m_staminaReturn;
-    private bool m_isShield = false;
 
     [Header("Для персонажа")]
     [SerializeField] float      m_speed = 4.0f;
@@ -16,6 +16,10 @@ public class HeroKnight : MonoBehaviour {
     [SerializeField] float      m_rollForce = 6.0f;
     [SerializeField] bool       m_noBlood = false;
     [SerializeField] GameObject m_slideDust;
+
+    [SerializeField] private Transform m_attackPoint;   //
+    [SerializeField] private float m_attackRange = 0.5f;// Для ударов
+    [SerializeField] private LayerMask m_enemyLayers;   // 
 
     private Animator            m_animator;
     private Rigidbody2D         m_body2d;
@@ -84,10 +88,13 @@ public class HeroKnight : MonoBehaviour {
         }
 
         // Swap direction of sprite depending on walk direction
+       
+
         if (inputX > 0)
         {
             GetComponent<SpriteRenderer>().flipX = false;
             m_facingDirection = 1;
+            
         }
             
         else if (inputX < 0)
@@ -122,6 +129,7 @@ public class HeroKnight : MonoBehaviour {
         //Attack
         else if(Input.GetMouseButtonDown(0) && m_timeSinceAttack > 0.25f && !m_rolling && m_stamina >= 5f)
         {
+            Attack();
             m_currentAttack++;
 
             // Loop back to one after third attack
@@ -216,7 +224,7 @@ public class HeroKnight : MonoBehaviour {
         }
     }
     // For Stamina
-    private void ControleStamina()
+    void ControleStamina()
     {
         if (m_stamina > 100f)
             m_stamina = 100f;
@@ -225,5 +233,23 @@ public class HeroKnight : MonoBehaviour {
             m_stamina = 0f;
 
         m_staminaBar.value = m_stamina;
+    }
+
+    void Attack()
+    {
+        Collider2D[] _hitEnemies = Physics2D.OverlapCircleAll(m_attackPoint.position, m_attackRange, m_enemyLayers);
+
+        foreach (Collider2D enemy in _hitEnemies)
+        {
+            Debug.Log("kjl");
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (m_attackPoint == null)
+            return;
+
+        Gizmos.DrawWireSphere(m_attackPoint.position, m_attackRange);
     }
 }
