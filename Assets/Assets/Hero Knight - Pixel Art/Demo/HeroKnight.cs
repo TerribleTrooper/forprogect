@@ -2,13 +2,20 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class HeroKnight : MonoBehaviour {
+public class HeroKnight : MonoBehaviour 
+{
 
     [Header("Для выносливости")]
-    private bool m_isShield = false; // Проверка с щитом персонаж
     [SerializeField] private float m_stamina;
     [SerializeField] private Slider m_staminaBar;
     [SerializeField] private float m_staminaReturn;
+    private bool m_isShield = false; // Проверка с щитом персонаж
+
+    [Header("Для ударов")]
+    [SerializeField] private Transform m_attackPoint;
+    [SerializeField] private float m_attackRange = 0.5f;
+    [SerializeField] private LayerMask m_enemyLayers;
+    [SerializeField] private float m_attackDamage = 20;
 
     [Header("Для персонажа")]
     [SerializeField] float      m_speed = 4.0f;
@@ -16,10 +23,6 @@ public class HeroKnight : MonoBehaviour {
     [SerializeField] float      m_rollForce = 6.0f;
     [SerializeField] bool       m_noBlood = false;
     [SerializeField] GameObject m_slideDust;
-
-    [SerializeField] private Transform m_attackPoint;   //
-    [SerializeField] private float m_attackRange = 0.5f;// Для ударов
-    [SerializeField] private LayerMask m_enemyLayers;   // 
 
     private Animator            m_animator;
     private Rigidbody2D         m_body2d;
@@ -241,7 +244,7 @@ public class HeroKnight : MonoBehaviour {
 
         foreach (Collider2D enemy in _hitEnemies)
         {
-            Debug.Log("kjl");
+            enemy.GetComponent<EnemyScript>().TakeDamage(m_attackDamage);
         }
     }
 
